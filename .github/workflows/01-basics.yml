@@ -8,3 +8,5 @@ jobs:
     steps:
       - name: print hello world
         run: echo "Hello world"
+      - name: print testing
+        run: echo "testing now..."
