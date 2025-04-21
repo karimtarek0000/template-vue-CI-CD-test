@@ -1,0 +1,14 @@
+name: 01-basics
+
+on: workflow_dispatch
+
+jobs:
+  testing-now:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run-this-now-1
+        run: 'hello world 1'
+      - name: run-this-now-2
+        run: 'hello world-2'
+      - name: run-this-now-3
+        run: 'hello world 3'
