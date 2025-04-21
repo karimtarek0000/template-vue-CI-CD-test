@@ -3,10 +3,18 @@ name: 01-basics
 on: workflow_dispatch
 
 jobs:
-  testing-now:
+  job1:
     runs-on: ubuntu-latest
     steps:
-      - name: print hello world
-        run: echo "Hello world"
-      - name: print testing
-        run: echo "testing now..."
+      - name: print hello world 1
+        run: echo "Hello world 1"
+      - name: print testing 1
+        run: echo "testing now 1..."
+jobs:
+  job2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print hello world 2
+        run: echo "Hello world 2"
+      - name: print testing 2
+        run: echo "testing now 2..."
