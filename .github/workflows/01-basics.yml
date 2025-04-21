@@ -10,7 +10,6 @@ jobs:
         run: echo "Hello world 1"
       - name: print testing 1
         run: echo "testing now 1..."
-jobs:
   job2:
     runs-on: ubuntu-latest
     steps:
