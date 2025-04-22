@@ -2,7 +2,7 @@ name: 02-new-work
 
 on:
   push:
-    tags: [v2]
+    tags-ignore: [v2]
 
 jobs:
   job1:

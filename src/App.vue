@@ -3,7 +3,7 @@
 <template>
 	<div>
 		<RouterView />
-		<h6>gshhs</h6>
+		<h6>tags</h6>
 	</div>
 </template>
 
