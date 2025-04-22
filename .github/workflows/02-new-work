@@ -1,0 +1,10 @@
+name: 02-new-work
+
+on: push
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print hello world 1
+        run: echo "Hello world 1"
