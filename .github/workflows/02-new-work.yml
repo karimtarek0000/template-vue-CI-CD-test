@@ -1,6 +1,8 @@
 name: 02-new-work
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [closed]
 
 jobs:
   job1:
