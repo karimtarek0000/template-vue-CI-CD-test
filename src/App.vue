@@ -3,6 +3,10 @@
 <template>
 	<div>
 		<RouterView />
+		<p>
+			Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem,
+			praesentium!
+		</p>
 	</div>
 </template>
 
