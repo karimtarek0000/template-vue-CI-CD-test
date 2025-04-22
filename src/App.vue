@@ -3,7 +3,7 @@
 <template>
 	<div>
 		<RouterView />
-		<h6>tags new ndsdsddsdsd</h6>
+		<h6>tags new ndsdsddsdsddsds</h6>
 	</div>
 </template>
 
