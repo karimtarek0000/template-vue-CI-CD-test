@@ -3,6 +3,7 @@
 <template>
 	<div>
 		<RouterView />
+		<h6>gshhs</h6>
 	</div>
 </template>
 
