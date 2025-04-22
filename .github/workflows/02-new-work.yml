@@ -2,7 +2,8 @@ name: 02-new-work
 
 on:
   push:
-    tags-ignore: [v2]
+    paths:
+      - 'src/App.vue'
 
 jobs:
   job1:
