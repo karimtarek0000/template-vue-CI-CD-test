@@ -1,8 +1,9 @@
 name: 02-new-work
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches:
+      - testing
 
 jobs:
   job1:
