@@ -3,9 +3,9 @@ name: 02-new-work
 run-name: This is a new workflow
 
 on:
-  push:
-    branches:
-      - master
+  pull:
+    types:
+      - closed
 
 jobs:
   job1:
