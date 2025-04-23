@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print message
-        run: echo ${{ job.status }}
+        run: echo ${{ toJson(github) }}
