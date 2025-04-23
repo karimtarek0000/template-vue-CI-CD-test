@@ -6,7 +6,5 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - name: print hello world 1
-        run: echo "Hello world 1"
-      - name: print testing 1
-        run: echo ${{ github }}
+      - name: print message
+        run: echo ${{ github.actor }}
