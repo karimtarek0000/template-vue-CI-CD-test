@@ -1,5 +1,7 @@
 name: 01-basics
 
+run-name: ${{ github.actor }} run this workflow Try number ${{ github.run_number }}
+
 on: workflow_dispatch
 
 jobs:
