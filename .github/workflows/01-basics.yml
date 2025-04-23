@@ -1,19 +1,12 @@
 name: 01-basics
 
+run-name: ${{ github.actor }} run this workflow Try number ${{ github.run_number }}
+
 on: workflow_dispatch
 
 jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - name: print hello world 1
-        run: echo "Hello world 1"
-      - name: print testing 1
-        run: echo "testing now 1..."
-  job2:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print hello world 2
-        run: echo "Hello world 2"
-      - name: print testing 2
-        run: echo "testing now 2..."
+      - name: print message
+        run: echo ${{ github.actor }}
