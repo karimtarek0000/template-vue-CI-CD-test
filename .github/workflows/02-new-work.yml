@@ -16,5 +16,5 @@ jobs:
         run: echo "Hello world 1"
 
       - name: print hello world 1
-        if: github.event.pull_request.file_changes > 1
+        if: github.event.pull_request.file_changes > 2
         run: echo "Hello world 1"
