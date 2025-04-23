@@ -3,12 +3,6 @@
 <template>
 	<div>
 		<RouterView />
-		<h6>tags new dsdsds</h6>
-		<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi officia
-			perspiciatis beatae molestiae ducimus fugiat eius ratione alias
-			voluptatum? Exercitationem.
-		</p>
 	</div>
 </template>
 
