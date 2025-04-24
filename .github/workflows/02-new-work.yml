@@ -2,19 +2,12 @@ name: 02-new-work
 
 run-name: This is a new workflow
 
-env:
-  TEST_NAME1: karim
-
 on: workflow_dispatch
 
 jobs:
   job1:
     runs-on: ubuntu-latest
-    env:
-      TEST_NAME2: karim abdel aziz
     steps:
       - name: print hello world 1
-        run: echo ${{ env.TEST_NAME1 }}
-      - name: print hello world 2
-        run: echo ${{ env.TEST_NAME2 }}
+        run: echo ${{ var.TEST_NAME }}
      
