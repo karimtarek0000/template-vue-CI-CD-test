@@ -9,5 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print hello world 1
-        run: echo ${{ env }}
+        run: env
      
