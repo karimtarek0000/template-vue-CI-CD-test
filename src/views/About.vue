@@ -9,7 +9,7 @@ useHead({
 
 <template>
 	<div class="about">
-		<h1>About Page</h1>
+		<h1>About Page testing</h1>
 		<p>This page issdsdsdsd prefetched after the initial load.</p>
 	</div>
 </template>
