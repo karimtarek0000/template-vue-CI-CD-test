@@ -2,19 +2,19 @@ name: 02-new-work
 
 run-name: This is a new workflow
 
-on:
-  pull_request:
-    types:
-      - closed
+env:
+  TEST_NAME1: karim
+
+on: workflow_dispatch
 
 jobs:
   job1:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    env:
+      TEST_NAME2: karim abdel aziz
     steps:
       - name: print hello world 1
-        run: echo "Hello world 1"
-
-      - name: print hello world 1
-        if: github.event.pull_request.file_changes > 2
-        run: echo "Hello world 1"
+        run: echo ${{ env.TEST_NAME1 }}
+      - name: print hello world 2
+        run: echo ${{ env.TEST_NAME2 }}
+     
