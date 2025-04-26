@@ -1,27 +1,16 @@
 name: 02-new-work
 
-run-name: Test NEEDS
+run-name: Test MATRIX
 
 on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: matrix.os
+    strategy:
+      matrix:
+        os: [ubuntu-latest, window-latest]
     steps:
-      - name: print hello world 1
-        run: echo 'Build Done'
-  
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: print hello world 1
-        run: echo 'Test Done'
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build, test]
-    steps:
-      - name: print hello world 1
-        run: echo 'Deploy Done'
+      - name: print
+        run: echo This runs on ${{ matrix.os }}
 
