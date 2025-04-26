@@ -16,7 +16,7 @@ jobs:
     needs: build
     steps:
       - name: print hello world 1
-        run: exit 2
+        run: echo 'Test Done'
 
   deploy:
     runs-on: ubuntu-latest
