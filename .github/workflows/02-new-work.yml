@@ -2,10 +2,10 @@ name: 02-new-work
 
 run-name: This is a new workflow
 
-premissions:
-  issues: write
-
 on: workflow_dispatch
+
+permissions:
+  issues: write
 
 jobs:
   open-issue:
