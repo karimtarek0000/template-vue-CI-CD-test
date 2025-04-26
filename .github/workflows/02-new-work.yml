@@ -16,12 +16,12 @@ jobs:
     needs: build
     steps:
       - name: print hello world 1
-        run: echo 'Done'
+        run: exit 2
 
   deploy:
     runs-on: ubuntu-latest
     needs: [build, test]
     steps:
       - name: print hello world 1
-        run: echo 'Done'
+        run: echo 'Deploy Done'
 
