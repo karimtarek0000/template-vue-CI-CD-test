@@ -14,6 +14,9 @@ jobs:
         exclude:
            - os: ubuntu-latest
              node_version: 20
+        include:
+            - os: macos-latest
+              node_version: 21
     steps:
       - name: print
         run: echo This runs on ${{ matrix.os }} and run on node version ${{ matrix.node_version }}
