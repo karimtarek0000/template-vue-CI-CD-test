@@ -8,6 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: print
-        run: node -v
+      - name: change node version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
 
+      - name: Print node version
+        run: node -v
+      
