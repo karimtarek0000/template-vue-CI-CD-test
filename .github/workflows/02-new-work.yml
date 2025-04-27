@@ -11,5 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Print text
-        uses: ./.github/actions/print-some-text
+      - name: Open new issue
+        run: gh issue create --title "This is a first bug" --body "There are alot of bugs" --label "bug"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      
