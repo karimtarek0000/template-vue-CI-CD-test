@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4.2.2
   
       - name: Open new issue
-        run: gh issue create --title "This is a first bug" --body "There are alot of bugs" --label "bug"
+        run: gh issue create --title "This is a first bug" --body "There are alot of bugs"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
