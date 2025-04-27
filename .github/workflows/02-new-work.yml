@@ -8,11 +8,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-
+      - name: Cache
+        uses: actions/cache@v4.2.3
+  
       - name: Open new issue
-        run: gh issue create --title "This is a first bug" --body "There are alot of bugs"
+        run: gh issue create --title "This is a first bug" --body "There are alot of bugs" --label "bug"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
