@@ -7,9 +7,11 @@ on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: 
-      image: node:16
+    
+    services: 
+        image: mongo:latest
+      
     steps:
       - name: Print node version
-        run: node -v
+        run: mongos
       
