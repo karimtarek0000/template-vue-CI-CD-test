@@ -5,6 +5,5 @@ description: Print some data
 runs:
   using: 'composite'
   steps:
-    - name: Print some text
-      run: echo "Hello world"
-      shell: bash
+      - run: echo "Hello world"
+        shell: bash

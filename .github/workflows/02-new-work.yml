@@ -8,4 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/print-some-text
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Print text
+        uses: ./.github/actions/print-some-text
