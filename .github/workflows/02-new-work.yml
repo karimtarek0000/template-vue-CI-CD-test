@@ -4,6 +4,9 @@ run-name: Test marketplace
 
 on: workflow_dispatch
 
+permissions:
+   issues: write
+  
 jobs:
   open-new-issue:
     runs-on: ubuntu-latest
