@@ -1,9 +1,9 @@
 <script setup>
-  import { useHead } from '@vueuse/head';
+  import { useHead } from "@vueuse/head";
 
   // Set page-specific metadata
   useHead({
-    title: 'About',
+    title: "About",
   });
 </script>
 
