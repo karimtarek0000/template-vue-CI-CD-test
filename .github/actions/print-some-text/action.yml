@@ -1,9 +1,0 @@
-name: Print some data
-
-description: Print some data
-
-runs:
-  using: 'composite'
-  steps:
-      - run: echo "Hello world"
-        shell: bash

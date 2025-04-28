@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup lang="ts">
+console.log('testing')
+</script>
 
 <template>
 	<div>
