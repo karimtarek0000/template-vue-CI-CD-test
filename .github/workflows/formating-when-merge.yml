@@ -1,0 +1,29 @@
+name: Comment PR close
+
+run-name: Comment on PR if closed
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  Fix-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Install all dependencies
+        run: npm install
+
+      - name: Fix Formatting
+        run: npm run format
+
+      - name: Commit changes
+        run: |
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
+          git add .
+          git commit -m "Fix formatting" || exit 0
+          git push
