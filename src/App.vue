@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 <script setup lang="ts"></script>
+=======
+<script setup lang="ts">
+  console.log("testing");
+  const testing = "dfdfdf";
+</script>
+>>>>>>> d6fbe8b7e88f232380d8c2246723f5d4679ee1fb
 
 <template>
   <div>
