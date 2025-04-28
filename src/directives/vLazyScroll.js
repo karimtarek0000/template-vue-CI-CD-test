@@ -2,12 +2,12 @@ export default {
   mounted(el, binding) {
     const options = {
       root: null,
-      rootMargin: binding.value?.rootMargin || "0px",
+      rootMargin: binding.value?.rootMargin || '0px',
       threshold: binding.value?.threshold || 0,
     };
 
-    const callback = (entries) => {
-      entries.forEach((entry) => {
+    const callback = entries => {
+      entries.forEach(entry => {
         // Update the component's visibility state
         if (binding.value?.onVisibilityChange) {
           binding.value.onVisibilityChange(entry.isIntersecting);
