@@ -1,0 +1,18 @@
+name: Run unit test
+
+run-name: Run unit test
+
+on: pull_request
+
+jobs:
+  Run-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Install all dependencies
+        run: npm install
+
+      - name: Run testing
+        run: npm run test

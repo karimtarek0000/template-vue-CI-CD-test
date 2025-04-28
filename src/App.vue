@@ -1,7 +1,4 @@
-<script setup lang="ts">
-  console.log('testing');
-  const testing = 'dfdfdf';
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
