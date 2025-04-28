@@ -1,6 +1,6 @@
-name: 02-new-work
+name: Comment PR close
 
-run-name: Test marketplace
+run-name: Comment on PR if closed
 
 on:
   pull_request:
