@@ -3,7 +3,7 @@
 <template>
   <div>
     <RouterView />
-    <p>testing</p>
+    <p>New feature</p>
   </div>
 </template>
 
