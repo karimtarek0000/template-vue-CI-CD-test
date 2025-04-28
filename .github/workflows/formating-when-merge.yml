@@ -1,6 +1,6 @@
-name: Comment PR close
+name: Fix formatting when merge
 
-run-name: Comment on PR if closed
+run-name: Fix formatting when merge
 
 on:
   push:
