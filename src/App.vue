@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  console.log('testing');
-  const testing = 'dfdfdf';
+  console.log("testing");
+  const testing = "dfdfdf";
 </script>
 
 <template>
