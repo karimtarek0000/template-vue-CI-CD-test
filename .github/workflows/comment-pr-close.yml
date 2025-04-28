@@ -2,21 +2,23 @@ name: 02-new-work
 
 run-name: Test marketplace
 
-on: workflow_dispatch
+on:
+  pull_request:
+    types:
+      - closed
 
-permissions:
-   issues: write
-  
 jobs:
-  open-new-issue:
+  create-new-comment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
 
-      - name: Open new issue
-        run: gh issue create --title "This is a bug" --body "Thank you for opening this issue!" --label "bug"
+      - name: Create comment on PR
+        if: github.event.pull_request.merged == false
+        run:
+          gh pr comment $PR_NUMBER --body "This PR not working fine please make
+          sure all working and create new PR"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      
+          PR_NUMBER: ${{ github.event.pull_request.number }}
