@@ -2,7 +2,7 @@ export default {
   mounted(el, binding) {
     const options = {
       root: null,
-      rootMargin: binding.value?.rootMargin || "0px",
+      rootMargin: binding.value?.rootMargin || '0px',
       threshold: binding.value?.threshold || 0,
     };
 

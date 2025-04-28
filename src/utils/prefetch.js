@@ -52,7 +52,7 @@ export function prefetchRoute(router, routeName) {
 
   try {
     // Force prefetch of the route's component
-    if (typeof route.components?.default === "function") {
+    if (typeof route.components?.default === 'function') {
       route.components.default();
       prefetchedRoutes.add(routeName);
     }
@@ -68,11 +68,11 @@ export function prefetchRoute(router, routeName) {
 function setupOnDemandPrefetching(router) {
   // We'll implement this in a globally registered directive
   document.addEventListener(
-    "mouseover",
+    'mouseover',
     event => {
       // Check if the hovered element is a link
-      if (event.target.tagName === "A" && event.target.hasAttribute("href")) {
-        const href = event.target.getAttribute("href");
+      if (event.target.tagName === 'A' && event.target.hasAttribute('href')) {
+        const href = event.target.getAttribute('href');
 
         // Find a matching route
         const route = router.resolve(href);
