@@ -5,7 +5,12 @@ console.log('testing')
 <template>
 	<div>
 		<RouterView />
-		<p>testing</p>
+		<div>
+			<p>
+				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Numquam,
+				commodi.
+			</p>
+		</div>
 	</div>
 </template>
 
