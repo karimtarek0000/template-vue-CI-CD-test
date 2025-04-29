@@ -8,11 +8,12 @@ jobs:
   Run-unit-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4.2.2
 
-      - name: Install all dependencies
-        run: npm install
+      - name: Clean and install dependencies
+        run: |
+          npm ci || (rm -rf node_modules package-lock.json && npm install)
 
-      - name: Run testing
+      - name: Run Unit Tests
         run: npm run test
