@@ -1,11 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  console.log('change');
+</script>
 
 <template>
   <div>
     <RouterView />
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus, repellat.</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
+    <h2>testing</h2>
   </div>
 </template>
 
