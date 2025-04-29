@@ -1,5 +1,18 @@
-# Vue 3 + Vite
+# Template CI/CD test with vue
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This project is set up to implement CI/CD practices with Vue 3.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## CI/CD
+
+This project includes a CI/CD pipeline that performs:
+
+- Formating with prettier
+- Code linting with eslint
+- Unit testing with vitest
+
+## Available Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build for production
+- `npm run test` - Run unit tests
+- `npm run lint` - Run ESLint
