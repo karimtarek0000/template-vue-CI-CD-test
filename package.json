@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:changed": "vitest --changed",
+    "test:changed": "vitest --changed=origin/master",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,vue,ts,tsx,json,css,scss,md}\"",

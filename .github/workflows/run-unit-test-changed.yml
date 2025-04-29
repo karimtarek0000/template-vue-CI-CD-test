@@ -7,15 +7,19 @@ on: pull_request
 jobs:
   Run-unit-test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
 
+      - name: Fetch origin branches (for vitest --changed)
+        run: git fetch --no-tags --prune --depth=10 origin
+
       - name: Clean and install dependencies
         run: |
           npm ci || (rm -rf node_modules package-lock.json && npm install)
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests (Changed files only)
         run: npm run test:changed
