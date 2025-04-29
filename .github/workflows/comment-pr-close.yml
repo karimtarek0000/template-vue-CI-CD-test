@@ -11,7 +11,8 @@ jobs:
   create-new-comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/checkout
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
 
       - name: Create comment on PR
         if: github.event.pull_request.merged == false
