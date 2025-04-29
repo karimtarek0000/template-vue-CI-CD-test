@@ -1,0 +1,18 @@
+name: Eslint check
+
+run-name: Eslint check
+
+on: pull_request
+
+jobs:
+  Eslint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Install all dependencies
+        run: npm install
+
+      - name: Run Eslint check
+        run: npm run lint
