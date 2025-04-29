@@ -8,8 +8,7 @@ jobs:
   Run-unit-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+      - uses: ./.github/actions/checkout
 
       - name: Clean and install dependencies
         run: |

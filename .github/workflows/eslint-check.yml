@@ -8,8 +8,7 @@ jobs:
   Eslint-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      - uses: ./.github/actions/checkout
 
       - name: Install all dependencies
         run: npm install

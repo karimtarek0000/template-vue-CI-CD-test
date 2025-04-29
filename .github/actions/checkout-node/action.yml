@@ -1,0 +1,7 @@
+name: Checkout node.js
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4.2.2

@@ -11,13 +11,11 @@ jobs:
   create-new-comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      - uses: ./.github/actions/checkout
 
       - name: Create comment on PR
         if: github.event.pull_request.merged == false
-        run:
-          gh pr comment $PR_NUMBER --body "This PR not working fine please make
+        run: gh pr comment $PR_NUMBER --body "This PR not working fine please make
           sure all working and create new PR"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
