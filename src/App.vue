@@ -1,12 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
-    <RouterView />
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus, repellat.</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.</p>
-  </div>
+  <h1>Template CI/CD test</h1>
+  <p>Eslint - prettier - unit test</p>
 </template>
 
 <style>
