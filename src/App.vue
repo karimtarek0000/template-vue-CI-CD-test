@@ -1,6 +1,4 @@
-<script setup lang="ts">
-  console.log('testing');
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
