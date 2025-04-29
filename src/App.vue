@@ -3,7 +3,7 @@
 <template>
   <div>
     <RouterView />
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus, repellat.</p>
+    <h4>testing</h4>
   </div>
 </template>
 
