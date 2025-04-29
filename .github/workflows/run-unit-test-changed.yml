@@ -1,0 +1,19 @@
+name: Run unit test changed
+
+run-name: Run unit test changed
+
+on: pull_request
+
+jobs:
+  Run-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Clean and install dependencies
+        run: |
+          npm ci || (rm -rf node_modules package-lock.json && npm install)
+
+      - name: Run Unit Tests
+        run: npm run test:changed

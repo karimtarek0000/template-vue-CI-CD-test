@@ -1,8 +1,11 @@
-name: Run unit test
+name: Run all unit test
 
-run-name: Run unit test
+run-name: Run all unit test merge to master
 
-on: pull_request
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   Run-unit-test:
