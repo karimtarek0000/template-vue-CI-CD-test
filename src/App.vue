@@ -1,6 +1,17 @@
 <template>
   <h1>Template CI/CD test</h1>
   <p>Eslint - prettier - unit test</p>
+  <p>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero, iusto voluptate inventore hic
+    omnis sit reiciendis nulla odit? Deleniti velit nisi sit corporis, facere esse quasi reiciendis
+    nulla fuga maxime labore, perspiciatis nostrum accusamus molestiae odit omnis voluptates,
+    aliquam fugit officia. Rerum similique dolorem, est, eveniet expedita officiis quas numquam
+    illum at neque quidem officia. Facere inventore ipsum sequi voluptatum veniam, illum molestias
+    velit et illo eum reiciendis quibusdam iusto odit eius qui accusamus cumque cum cupiditate
+    tenetur aperiam consequuntur dignissimos laboriosam. Maiores dignissimos nam praesentium
+    explicabo quisquam facere nulla veritatis beatae aut ipsa delectus, vitae itaque consectetur eum
+    accusantium!
+  </p>
 </template>
 
 <script setup lang="ts"></script>
