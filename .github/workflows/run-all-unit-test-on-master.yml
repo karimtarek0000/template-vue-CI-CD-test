@@ -2,7 +2,10 @@ name: Run all unit test
 
 run-name: Run all unit test on master
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   Run-unit-test:
