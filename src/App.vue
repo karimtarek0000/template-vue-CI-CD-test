@@ -3,7 +3,6 @@
 <template>
   <h1>Template CI/CD test</h1>
   <p>Eslint - prettier - unit test</p>
-  <p>For testing</p>
 </template>
 
 <style>
