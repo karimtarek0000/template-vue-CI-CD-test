@@ -21,13 +21,13 @@ export function setupPrefetching(router, options = {}) {
   setTimeout(() => {
     const routesToPrefetch = router
       .getRoutes()
-      .filter(route => route.meta?.prefetch && !prefetchedRoutes.has(route.name))
+      .filter((route) => route.meta?.prefetch && !prefetchedRoutes.has(route.name))
       .sort((a, b) => (a.meta.priority || Infinity) - (b.meta.priority || Infinity));
 
     // Prefetch routes with high priority first
     routesToPrefetch
-      .filter(route => (route.meta.priority || 999) <= priorityThreshold)
-      .forEach(route => {
+      .filter((route) => (route.meta.priority || 999) <= priorityThreshold)
+      .forEach((route) => {
         prefetchRoute(router, route.name);
       });
   }, delay);
@@ -44,7 +44,7 @@ export function setupPrefetching(router, options = {}) {
  * @param {String} routeName - Name of the route to prefetch
  */
 export function prefetchRoute(router, routeName) {
-  const route = router.getRoutes().find(r => r.name === routeName);
+  const route = router.getRoutes().find((r) => r.name === routeName);
 
   if (!route || prefetchedRoutes.has(routeName)) {
     return;
@@ -69,7 +69,7 @@ function setupOnDemandPrefetching(router) {
   // We'll implement this in a globally registered directive
   document.addEventListener(
     'mouseover',
-    event => {
+    (event) => {
       // Check if the hovered element is a link
       if (event.target.tagName === 'A' && event.target.hasAttribute('href')) {
         const href = event.target.getAttribute('href');
@@ -81,6 +81,6 @@ function setupOnDemandPrefetching(router) {
         }
       }
     },
-    { passive: true }
+    { passive: true },
   );
 }

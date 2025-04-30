@@ -1,3 +1,10 @@
+<template>
+  <div class="about">
+    <h1>About Page testing</h1>
+    <p>This page issdsdsdsd prefetched after the initial load.</p>
+  </div>
+</template>
+
 <script setup>
   import { useHead } from '@vueuse/head';
 
@@ -6,13 +13,6 @@
     title: 'About',
   });
 </script>
-
-<template>
-  <div class="about">
-    <h1>About Page testing</h1>
-    <p>This page issdsdsdsd prefetched after the initial load.</p>
-  </div>
-</template>
 
 <style scoped>
   .about {

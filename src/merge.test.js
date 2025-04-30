@@ -9,7 +9,7 @@ describe('merge', () => {
       },
       {
         job: 'developer',
-      }
+      },
     );
 
     expect(merged).toEqual({
@@ -26,7 +26,7 @@ describe('merge', () => {
       {
         job: 'developer',
         name: 'newName',
-      }
+      },
     );
 
     expect(merged).toEqual({
@@ -50,7 +50,7 @@ describe('merge', () => {
           facebook: 'facebook',
           twitter: 'twitter2',
         },
-      }
+      },
     );
 
     expect(merged).toEqual({

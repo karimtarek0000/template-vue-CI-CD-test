@@ -1,8 +1,8 @@
-<script setup lang="ts"></script>
-
 <template>
   <h2>testing</h2>
 </template>
+
+<script setup lang="ts"></script>
 
 <style>
   .grid {

@@ -43,6 +43,22 @@ export default [
     rules: {
       'no-console': 'error', // This rule disallows console statements
       'no-debugger': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      eqeqeq: ['error', 'always'],
+      'no-multiple-empty-lines': ['error', { max: 1 }],
+      'no-trailing-spaces': 'error',
+      'arrow-body-style': ['error', 'as-needed'],
+      curly: ['error', 'all'],
+      'no-use-before-define': ['error', { functions: false }],
+      'no-undef': 'error',
+      'prefer-template': 'error',
+      'object-shorthand': 'error',
+      'prefer-destructuring': ['error', { object: true, array: false }],
+      'no-else-return': 'error',
+      'spaced-comment': ['error', 'always'],
+      'no-duplicate-imports': 'error',
     },
   },
   {
@@ -71,6 +87,61 @@ export default [
       'no-console': 'error',
       'no-debugger': 'error',
       'vue/multi-word-component-names': 'off',
+      'vue/component-definition-name-casing': ['error', 'PascalCase'],
+      'vue/block-order': [
+        'error',
+        {
+          order: ['template', 'script', 'style'],
+        },
+      ],
+      'vue/no-v-html': 'warn',
+      'vue/no-unused-vars': 'error',
+      'vue/require-default-prop': 'error',
+      'vue/order-in-components': 'error',
+      'vue/html-closing-bracket-newline': [
+        'error',
+        {
+          singleline: 'never',
+          multiline: 'always',
+        },
+      ],
+      'vue/html-self-closing': [
+        'error',
+        {
+          html: { void: 'always', normal: 'never', component: 'always' },
+        },
+      ],
+      'vue/max-attributes-per-line': [
+        'error',
+        {
+          singleline: 3,
+          multiline: 1,
+        },
+      ],
+      'vue/no-mutating-props': 'error',
+      'vue/no-side-effects-in-computed-properties': 'error',
+      'vue/this-in-template': ['error', 'never'],
+      'vue/v-bind-style': ['error', 'shorthand'],
+      'vue/v-on-style': ['error', 'shorthand'],
+      'vue/v-slot-style': ['error', 'shorthand'],
+      'vue/attributes-order': [
+        'error',
+        {
+          order: [
+            'DEFINITION',
+            'LIST_RENDERING',
+            'CONDITIONALS',
+            'RENDER_MODIFIERS',
+            'GLOBAL',
+            'UNIQUE',
+            'TWO_WAY_BINDING',
+            'OTHER_DIRECTIVES',
+            'OTHER_ATTR',
+            'EVENTS',
+            'CONTENT',
+          ],
+        },
+      ],
     },
   },
 ];

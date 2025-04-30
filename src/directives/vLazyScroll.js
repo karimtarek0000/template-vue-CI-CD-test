@@ -6,8 +6,8 @@ export default {
       threshold: binding.value?.threshold || 0,
     };
 
-    const callback = entries => {
-      entries.forEach(entry => {
+    const callback = (entries) => {
+      entries.forEach((entry) => {
         // Update the component's visibility state
         if (binding.value?.onVisibilityChange) {
           binding.value.onVisibilityChange(entry.isIntersecting);
@@ -15,7 +15,7 @@ export default {
 
         // Unobserve if once is set and element is visible
         if (entry.isIntersecting && binding.value?.once) {
-          observer.unobserve(el);
+          entry.unobserve(el);
         }
       });
     };
