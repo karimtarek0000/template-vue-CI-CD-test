@@ -5,7 +5,7 @@ run-name: Deploy to Vercel
 on: workflow_dispatch
 
 jobs:
-  Deploy
+  Deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
