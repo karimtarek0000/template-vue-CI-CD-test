@@ -14,7 +14,10 @@
   </p>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const userInput = "alert('XSS!')";
+  eval(userInput);
+</script>
 
 <style>
   .app-container {
