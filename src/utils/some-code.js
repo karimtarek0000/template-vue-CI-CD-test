@@ -1,2 +1,2 @@
-const userInput = "alert('XSS!')";
+const userInput = "alert('XSS! and how')";
 eval(userInput);
