@@ -1,7 +1,8 @@
 name: 'CodeQL Analysis'
 
-on: pull_request:
-  types: opened
+on:
+  pull_request:
+    types: [opened]
 
 jobs:
   analyze:
