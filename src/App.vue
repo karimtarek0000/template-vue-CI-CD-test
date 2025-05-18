@@ -14,7 +14,9 @@
   </p>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  eval("alert('test')");
+</script>
 
 <style>
   .app-container {
