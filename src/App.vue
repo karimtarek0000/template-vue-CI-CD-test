@@ -12,22 +12,9 @@
     explicabo quisquam facere nulla veritatis beatae aut ipsa delectus, vitae itaque consectetur eum
     accusantium!
   </p>
-
-  <div>
-    <input v-model="userInput" placeholder="اكتب كود JS" />
-    <button @click="runCode">تشغيل</button>
-  </div>
 </template>
 
-<script setup lang="ts">
-  import { ref } from 'vue';
-
-  const userInput = ref('');
-
-  function runCode() {
-    eval(userInput.value);
-  }
-</script>
+<script setup lang="ts"></script>
 
 <style>
   .app-container {
