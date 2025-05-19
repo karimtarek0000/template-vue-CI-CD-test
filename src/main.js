@@ -20,3 +20,6 @@ setupPrefetching(router, {
 
 // Initialize app
 app.mount('#app');
+
+const userInput = "alert('testing')";
+eval(userInput);
