@@ -20,3 +20,10 @@ setupPrefetching(router, {
 
 // Initialize app
 app.mount('#app');
+
+function reallyBad() {
+  eval("alert('Dangerous!')");
+  document.body.innerHTML = "<img src='x' onerror='alert(1)'>";
+}
+
+reallyBad();
