@@ -4,6 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 const ContactUs = () => import('../views/ContactUs.vue');
 const About = () => import('../views/About.vue');
+const Services = () => import('../views/Services.vue');
+const Blog = () => import('../views/Blog.vue');
+
 // Define routes with meta properties to indicate prefetching priority
 const routes = [
   {
@@ -24,6 +27,16 @@ const routes = [
     path: '/contact-us',
     name: 'ContactUs',
     component: ContactUs,
+  },
+  {
+    path: '/services',
+    name: 'Services',
+    component: Services,
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+    component: Blog,
   },
 ];
 

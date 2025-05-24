@@ -61,6 +61,49 @@ export default [
       'no-duplicate-imports': 'error',
     },
   },
+  // Node.js scripts configuration
+  {
+    files: ['scripts/**/*.js', 'plugins/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        // Node.js globals
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        global: 'readonly',
+        console: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        // Modern Node.js globals
+        fetch: 'readonly',
+      },
+    },
+    rules: {
+      'no-console': 'warn', // Allow console in Node.js scripts but warn
+      'no-debugger': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-var': 'error',
+      'prefer-const': 'error',
+      eqeqeq: ['error', 'always'],
+      'no-multiple-empty-lines': ['error', { max: 1 }],
+      'no-trailing-spaces': 'error',
+      'arrow-body-style': ['error', 'as-needed'],
+      curly: ['error', 'all'],
+      'no-use-before-define': ['error', { functions: false }],
+      'no-undef': 'error',
+      'prefer-template': 'error',
+      'object-shorthand': 'error',
+      'prefer-destructuring': ['error', { object: true, array: false }],
+      'no-else-return': 'error',
+      'spaced-comment': ['error', 'always'],
+      'no-duplicate-imports': 'error',
+    },
+  },
   {
     files: ['**/*.vue'],
     languageOptions: {
