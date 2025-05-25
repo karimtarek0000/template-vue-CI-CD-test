@@ -18,6 +18,12 @@ export default defineConfig({
         { name: 'mobile', width: 375, height: 667 },
       ],
       generateInBuild: false, // Set to true if you want automatic generation during build
+      smartOptimization: true, // Enable smart CSS analysis and optimization
+      thresholds: {
+        criticalSizeKB: 14, // CSS under 14KB might be critical
+        largeSizeKB: 50, // CSS over 50KB gets lowest priority
+        componentThreshold: 5, // Component usage threshold
+      },
     }),
   ],
   test: {
