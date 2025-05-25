@@ -360,7 +360,7 @@ class CriticalCSSGenerator {
             cssString: cssContent, // Use cssString directly
             width: viewport.width,
             height: viewport.height,
-            timeout: 30000,
+            timeout: 60000, // Increased timeout from 30000 to 60000
             maxEmbeddedBase64Length: 1000,
             keepLargerMediaQueries: viewport.name === 'mobile',
             propertiesToRemove: ['(-webkit-)?transform', 'transition', 'animation'],
@@ -395,7 +395,21 @@ class CriticalCSSGenerator {
             blockJSRequests: false, // Allow JS to run for SPA
             strict: false, // Be more lenient with CSS parsing
             puppeteer: {
-              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+              args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--disable-web-security',
+                '--disable-features=VizDisplayCompositor',
+                '--no-first-run',
+                '--no-default-browser-check',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding',
+              ],
+              timeout: 60000, // Add explicit Puppeteer timeout
+              headless: true,
             },
           });
 
@@ -658,7 +672,19 @@ class CriticalCSSGenerator {
     // Create critical CSS style tag with nonce
     const criticalStyleTag = `<style nonce="${nonce}">${this.combinedCriticalCSS}</style>`;
 
-    // Inject critical CSS in head
+    // Transform any existing stylesheet links to prefetch links
+    html = html.replace(
+      /<link\s+([^>]*\s+)?rel="stylesheet"([^>]*\s+)?href="([^"]*\.css)"[^>]*>/gi,
+      (match, beforeRel, afterRel, href) => {
+        const fileName = path.basename(href);
+        // Keep the /assets/ prefix for the prefetch link to work correctly
+        const prefetchHref = href.startsWith('/assets/') ? href : `/assets/${fileName}`;
+        console.log(`🔗 Converting stylesheet link to prefetch: ${prefetchHref}`);
+        return `<link rel="prefetch" href="${prefetchHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
+      },
+    );
+
+    // Inject only critical CSS in head (no prefetch link since it's already handled above)
     html = html.replace('</head>', `  ${criticalStyleTag}\n</head>`);
 
     // Add CSP meta tag if not present
@@ -668,6 +694,8 @@ class CriticalCSSGenerator {
     }
 
     await fs.writeFile(indexPath, html, 'utf8');
+
+    console.log(`✅ Injected critical CSS and converted stylesheet links to prefetch`);
   }
 
   async removeCriticalFromMainCSS() {

@@ -7,8 +7,6 @@
     "dev": "vite",
     "build": "vite build",
     "build:critical": "vite build && node scripts/critical-css-generator.js",
-    "critical:generate": "node scripts/critical-css-generator.js",
-    "critical:analyze": "node scripts/critical-css-generator.js --analyze",
     "preview": "vite preview",
     "test": "vitest",
     "test:changed": "vitest --changed=origin/master",

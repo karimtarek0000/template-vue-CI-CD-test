@@ -74,22 +74,25 @@ export function criticalCSSPlugin(options = {}) {
   function generateSmartCSSLink(href, analysis, existingAttrs) {
     const { loadingStrategy } = analysis;
 
+    // Remove /assets/ prefix for the prefetch link
+    const cleanHref = href.replace(/^\/assets\//, '');
+
     switch (loadingStrategy) {
       case 'prefetch':
-        // Use prefetch with a more efficient loading pattern
-        return `<link rel="prefetch" href="${href}" as="style" ${existingAttrs} onload="this.rel='stylesheet';this.onload=null;">`;
+        // Use prefetch with the exact format you want
+        return `<link rel="prefetch" href="${cleanHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
 
       case 'preload-low':
-        return `<link rel="prefetch" href="${href}" as="style" ${existingAttrs} onload="this.rel='stylesheet';this.onload=null;">`;
+        return `<link rel="prefetch" href="${cleanHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
 
       case 'preload-high':
-        return `<link rel="preload" href="${href}" as="style" fetchpriority="high" ${existingAttrs} onload="this.onload=null;this.rel='stylesheet'">`;
+        return `<link rel="prefetch" href="${cleanHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
 
       case 'inline-candidate':
-        return `<link rel="prefetch" href="${href}" as="style" ${existingAttrs} onload="this.rel='stylesheet';this.onload=null;">`;
+        return `<link rel="prefetch" href="${cleanHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
 
       default:
-        return `<link rel="prefetch" href="${href}" as="style" ${existingAttrs} onload="this.rel='stylesheet';this.onload=null;">`;
+        return `<link rel="prefetch" href="${cleanHref}" as="style" onload="this.onload=null;this.rel='stylesheet'">`;
     }
   }
 

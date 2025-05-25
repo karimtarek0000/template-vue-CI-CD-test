@@ -17,7 +17,7 @@ export default defineConfig({
         { name: 'desktop', width: 1300, height: 900 },
         { name: 'mobile', width: 375, height: 667 },
       ],
-      generateInBuild: true, // Set to true if you want automatic generation during build
+      generateInBuild: false, // Set to true if you want automatic generation during build
       smartOptimization: true, // Enable smart CSS analysis and optimization
       thresholds: {
         criticalSizeKB: 14, // CSS under 14KB might be critical
