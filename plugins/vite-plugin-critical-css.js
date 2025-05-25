@@ -28,6 +28,7 @@ export function criticalCSSPlugin(options = {}) {
 
   let config;
   let isProduction = false;
+  let isGeneratingCritical = false; // ✅ Add loop prevention flag
   const cssAnalysis = new Map();
 
   // CSS content analysis function
@@ -109,11 +110,17 @@ export function criticalCSSPlugin(options = {}) {
     configResolved(resolvedConfig) {
       config = resolvedConfig;
       isProduction = resolvedConfig.command === 'build';
+
+      // ✅ Check if we're in a critical CSS generation cycle
+      if (process.env.CRITICAL_CSS_BUILD === 'true') {
+        isGeneratingCritical = true;
+        console.log('🔄 Detected critical CSS generation build - disabling plugin');
+      }
     },
 
     // Analyze CSS during build
     generateBundle(outputOptions, bundle) {
-      if (!isProduction || !smartOptimization) {
+      if (!isProduction || !smartOptimization || isGeneratingCritical) {
         return;
       }
 
@@ -138,7 +145,7 @@ export function criticalCSSPlugin(options = {}) {
     transformIndexHtml: {
       order: 'post',
       handler(html, context) {
-        if (!isProduction || !smartOptimization) {
+        if (!isProduction || !smartOptimization || isGeneratingCritical) {
           return html;
         }
 
@@ -192,16 +199,31 @@ export function criticalCSSPlugin(options = {}) {
     writeBundle: {
       order: 'post',
       async handler() {
-        if (!isProduction || !generateInBuild) {
+        // ✅ Prevent infinite loop with multiple checks
+        if (!isProduction || !generateInBuild || isGeneratingCritical) {
+          return;
+        }
+
+        // ✅ Check if critical CSS already exists to avoid regeneration
+        const criticalDir = path.join(config.root, 'critical');
+        const combinedFile = path.join(criticalDir, 'combined-critical.css');
+
+        if (await fs.pathExists(combinedFile)) {
+          console.log('📄 Critical CSS already exists, skipping generation');
           return;
         }
 
         const { execSync } = await import('child_process');
         try {
           console.log('🎨 Generating critical CSS...');
+
+          // ✅ Set environment variable to prevent loop
+          const env = { ...process.env, CRITICAL_CSS_BUILD: 'true' };
+
           execSync('node scripts/critical-css-generator.js', {
             cwd: config.root,
             stdio: 'inherit',
+            env,
           });
         } catch (error) {
           console.warn('⚠️ Critical CSS generation failed:', error.message);

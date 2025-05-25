@@ -106,6 +106,13 @@ class CriticalCSSGenerator {
 
   async buildProject() {
     console.log('📦 Building project for critical CSS analysis...');
+
+    // ✅ Check if we're already in a critical CSS build to prevent loops
+    if (process.env.CRITICAL_CSS_BUILD === 'true') {
+      console.log('🔄 Already in critical CSS build mode, skipping rebuild');
+      return;
+    }
+
     try {
       // First, build with CSS blocking disabled
       console.log('🔧 Building with CSS files enabled for analysis...');
