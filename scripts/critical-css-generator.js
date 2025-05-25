@@ -52,11 +52,25 @@ class CriticalCSSGenerator {
     this.criticalCSS = new Map();
     this.combinedCriticalCSS = '';
     this.baseURL = 'http://localhost:4173';
+    // Performance tracking
+    this.performanceMetrics = {
+      startTime: Date.now(),
+      originalCSSSize: 0,
+      criticalCSSSize: 0,
+      reducedMainCSSSize: 0,
+      routes: 0,
+      viewports: 0,
+    };
   }
 
   async init() {
     try {
       console.log('🚀 Initializing Critical CSS Generator...');
+      this.performanceMetrics.startTime = Date.now();
+
+      // Ensure critical directory exists
+      await fs.ensureDir(criticalDir);
+      console.log(`📁 Critical directory ready: ${criticalDir}`);
 
       // Start preview server
       await this.startPreviewServer();
@@ -72,6 +86,12 @@ class CriticalCSSGenerator {
 
       // Stop preview server
       await this.stopPreviewServer();
+
+      // Print performance impact
+      await this.printPerformanceImpact();
+
+      // Clean up critical folder
+      await this.cleanupCriticalFolder();
 
       console.log('✅ Critical CSS generation completed successfully!');
     } catch (error) {
@@ -192,6 +212,13 @@ class CriticalCSSGenerator {
     }
 
     const mainCSSFile = cssFiles[0]; // Use the first/main CSS file
+
+    // Track original CSS size
+    const originalCSSContent = await fs.readFile(mainCSSFile, 'utf8');
+    this.performanceMetrics.originalCSSSize = originalCSSContent.length;
+
+    this.performanceMetrics.routes = routes.length;
+    this.performanceMetrics.viewports = viewports.length;
 
     for (const route of routes) {
       console.log(`📄 Processing route: ${route.path}`);
@@ -394,6 +421,9 @@ class CriticalCSSGenerator {
 
       this.combinedCriticalCSS = combined;
 
+      // Track critical CSS size
+      this.performanceMetrics.criticalCSSSize = combined.length;
+
       // Save combined critical CSS for reference
       await fs.writeFile(path.join(criticalDir, 'combined-critical.css'), combined, 'utf8');
 
@@ -456,6 +486,9 @@ class CriticalCSSGenerator {
       combined = this.minifyCSS(combined);
 
       this.combinedCriticalCSS = combined;
+
+      // Track critical CSS size
+      this.performanceMetrics.criticalCSSSize = combined.length;
 
       // Save combined critical CSS for reference
       await fs.writeFile(path.join(criticalDir, 'combined-critical.css'), combined, 'utf8');
@@ -523,6 +556,7 @@ class CriticalCSSGenerator {
     console.log('✂️  Removing critical CSS from main CSS file...');
 
     const cssFiles = await this.findCSSFiles();
+    let totalReducedSize = 0;
 
     for (const cssFile of cssFiles) {
       let css = await fs.readFile(cssFile, 'utf8');
@@ -559,6 +593,7 @@ class CriticalCSSGenerator {
 
       const newSize = css.length;
       const reductionKB = ((originalSize - newSize) / 1024).toFixed(2);
+      totalReducedSize += newSize;
 
       console.log(
         `📉 Reduced ${path.basename(cssFile)} by ${reductionKB}KB while preserving interactive styles`,
@@ -566,6 +601,9 @@ class CriticalCSSGenerator {
 
       await fs.writeFile(cssFile, css, 'utf8');
     }
+
+    // Track total reduced main CSS size
+    this.performanceMetrics.reducedMainCSSSize = totalReducedSize;
   }
 
   shouldKeepInLazyCSS(cssRule) {
@@ -612,6 +650,41 @@ class CriticalCSSGenerator {
       console.log('🛑 Stopping preview server...');
       this.serverProcess.kill();
       this.serverProcess = null;
+    }
+  }
+
+  async printPerformanceImpact() {
+    console.log('📊 Performance Impact Report:');
+    console.log(
+      `- Original CSS Size: ${(this.performanceMetrics.originalCSSSize / 1024).toFixed(2)} KB`,
+    );
+    console.log(
+      `- Critical CSS Size: ${(this.performanceMetrics.criticalCSSSize / 1024).toFixed(2)} KB`,
+    );
+    console.log(
+      `- Reduced Main CSS Size: ${(this.performanceMetrics.reducedMainCSSSize / 1024).toFixed(2)} KB`,
+    );
+    console.log(`- Total Routes Processed: ${this.performanceMetrics.routes}`);
+    console.log(`- Total Viewports Processed: ${this.performanceMetrics.viewports}`);
+    console.log(
+      `- Time Taken: ${((Date.now() - this.performanceMetrics.startTime) / 1000).toFixed(2)} seconds`,
+    );
+  }
+
+  async cleanupCriticalFolder() {
+    console.log('🧹 Cleaning up critical folder...');
+
+    try {
+      const files = await fs.readdir(criticalDir);
+      for (const file of files) {
+        const filePath = path.join(criticalDir, file);
+        await fs.remove(filePath);
+        console.log(`- Removed ${file}`);
+      }
+
+      console.log('✅ Critical folder cleaned up');
+    } catch (error) {
+      console.error('❌ Failed to clean up critical folder:', error.message);
     }
   }
 }
