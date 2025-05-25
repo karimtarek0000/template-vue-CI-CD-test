@@ -49,9 +49,11 @@ const routes = [
 class CriticalCSSGenerator {
   constructor() {
     this.server = null;
+    this.serverProcess = null; // ✅ Add explicit server process tracking
     this.criticalCSS = new Map();
     this.combinedCriticalCSS = '';
     this.baseURL = 'http://localhost:4173';
+    this.currentPort = 4173; // ✅ Track the actual port being used
     // Performance tracking
     this.performanceMetrics = {
       startTime: Date.now(),
@@ -64,6 +66,31 @@ class CriticalCSSGenerator {
   }
 
   async init() {
+    // ✅ Add process signal handlers for proper cleanup
+    process.on('SIGINT', async () => {
+      console.log('\n⚠️ Received SIGINT, cleaning up...');
+      await this.cleanup();
+      process.exit(0);
+    });
+
+    process.on('SIGTERM', async () => {
+      console.log('\n⚠️ Received SIGTERM, cleaning up...');
+      await this.cleanup();
+      process.exit(0);
+    });
+
+    process.on('uncaughtException', async (error) => {
+      console.error('\n❌ Uncaught exception:', error);
+      await this.cleanup();
+      process.exit(1);
+    });
+
+    process.on('unhandledRejection', async (reason) => {
+      console.error('\n❌ Unhandled rejection:', reason);
+      await this.cleanup();
+      process.exit(1);
+    });
+
     try {
       console.log('🚀 Initializing Critical CSS Generator...');
       this.performanceMetrics.startTime = Date.now();
@@ -95,11 +122,12 @@ class CriticalCSSGenerator {
 
       console.log('✅ Critical CSS generation completed successfully!');
 
-      // Ensure clean exit
+      // ✅ Proper cleanup before exit
+      await this.cleanup();
       process.exit(0);
     } catch (error) {
       console.error('❌ Critical CSS generation failed:', error);
-      await this.stopPreviewServer();
+      await this.cleanup();
       process.exit(1);
     }
   }
@@ -158,25 +186,56 @@ class CriticalCSSGenerator {
 
   async startPreviewServer() {
     console.log('🌐 Starting preview server...');
+
+    // ✅ First, try to find an available port
+    const availablePort = await this.findAvailablePort();
+    this.currentPort = availablePort;
+    this.baseURL = `http://localhost:${availablePort}`;
+
+    // ✅ Check if a server is already running on this port
+    if (await this.isServerRunning(availablePort)) {
+      console.log(`📌 Server already running on port ${availablePort}, using existing server`);
+      return;
+    }
+
     try {
-      // Use spawn instead of execSync for better control
       const { spawn } = await import('child_process');
 
-      this.serverProcess = spawn('npm', ['run', 'preview'], {
-        cwd: rootDir,
-        stdio: 'pipe',
-        detached: false,
-      });
+      // ✅ Start server with specific port
+      this.serverProcess = spawn(
+        'npm',
+        ['run', 'preview', '--', '--port', availablePort.toString()],
+        {
+          cwd: rootDir,
+          stdio: 'pipe',
+          detached: false,
+        },
+      );
 
-      // Suppress output but capture errors
+      // ✅ Better output handling
+      let serverReady = false;
+
       this.serverProcess.stdout.on('data', (data) => {
-        // Silent - we just need the server running
+        const output = data.toString();
+        if (output.includes('Local:') || output.includes('ready')) {
+          serverReady = true;
+          console.log(`✅ Preview server started on port ${availablePort}`);
+        }
       });
 
       this.serverProcess.stderr.on('data', (data) => {
         const output = data.toString();
-        if (output.includes('EADDRINUSE')) {
-          console.log('📌 Preview server already running, continuing...');
+        console.log('Server output:', output);
+      });
+
+      // ✅ Handle server process errors
+      this.serverProcess.on('error', (error) => {
+        console.error('❌ Server process error:', error);
+      });
+
+      this.serverProcess.on('exit', (code) => {
+        if (code !== 0) {
+          console.warn(`⚠️ Server process exited with code ${code}`);
         }
       });
 
@@ -188,15 +247,64 @@ class CriticalCSSGenerator {
     }
   }
 
+  // ✅ Add method to find available port
+  async findAvailablePort(startPort = 4173) {
+    const net = await import('net');
+
+    for (let port = startPort; port < startPort + 20; port++) {
+      if (await this.isPortAvailable(port)) {
+        console.log(`🔍 Found available port: ${port}`);
+        return port;
+      }
+    }
+
+    throw new Error('No available ports found in range 4173-4193');
+  }
+
+  // ✅ Add method to check if port is available
+  async isPortAvailable(port) {
+    const net = await import('net');
+
+    return new Promise((resolve) => {
+      const server = net.createServer();
+
+      server.listen(port, () => {
+        server.close(() => {
+          resolve(true);
+        });
+      });
+
+      server.on('error', () => {
+        resolve(false);
+      });
+    });
+  }
+
+  // ✅ Add method to check if server is already running
+  async isServerRunning(port) {
+    try {
+      const response = await fetch(`http://localhost:${port}`, {
+        timeout: 1000,
+      });
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async waitForServer() {
     const maxAttempts = 30;
     let attempts = 0;
 
+    console.log(`⏳ Waiting for server at ${this.baseURL}...`);
+
     while (attempts < maxAttempts) {
       try {
-        const response = await fetch(this.baseURL);
+        const response = await fetch(this.baseURL, {
+          timeout: 5000,
+        });
         if (response.ok) {
-          console.log('✅ Preview server is ready');
+          console.log(`✅ Preview server is ready at ${this.baseURL}`);
           return;
         }
       } catch (error) {
@@ -207,7 +315,7 @@ class CriticalCSSGenerator {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    throw new Error('Preview server failed to start within timeout');
+    throw new Error(`Preview server failed to start within timeout at ${this.baseURL}`);
   }
 
   async generateCriticalCSS() {
@@ -658,8 +766,50 @@ class CriticalCSSGenerator {
   async stopPreviewServer() {
     if (this.serverProcess) {
       console.log('🛑 Stopping preview server...');
-      this.serverProcess.kill();
-      this.serverProcess = null;
+
+      try {
+        // ✅ Graceful shutdown first
+        this.serverProcess.kill('SIGTERM');
+
+        // ✅ Wait a bit for graceful shutdown
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        // ✅ Force kill if still running
+        if (!this.serverProcess.killed) {
+          console.log('⚠️ Forcing server shutdown...');
+          this.serverProcess.kill('SIGKILL');
+        }
+
+        this.serverProcess = null;
+        console.log('✅ Preview server stopped');
+      } catch (error) {
+        console.warn('⚠️ Error stopping server:', error.message);
+
+        // ✅ Fallback: try to kill by port
+        try {
+          const { execSync } = await import('child_process');
+          execSync(`lsof -ti:${this.currentPort} | xargs kill -9 2>/dev/null || true`);
+          console.log('✅ Server process killed by port');
+        } catch (fallbackError) {
+          console.warn('⚠️ Could not kill server by port:', fallbackError.message);
+        }
+      }
+    }
+  }
+
+  // ✅ Add cleanup method for process exit
+  async cleanup() {
+    console.log('🧹 Performing cleanup...');
+    await this.stopPreviewServer();
+
+    // ✅ Clean up any hanging processes
+    try {
+      const { execSync } = await import('child_process');
+      execSync(`pkill -f "npm.*preview" 2>/dev/null || true`);
+      execSync(`pkill -f "vite.*preview" 2>/dev/null || true`);
+      console.log('✅ Cleanup completed');
+    } catch (error) {
+      // Ignore cleanup errors
     }
   }
 
