@@ -1,16 +1,35 @@
 import { createHead } from '@vueuse/head';
-import { createApp } from 'vue';
+import { ViteSSG } from 'vite-ssg';
+import { createApp as createVueApp } from 'vue';
 import App from './App.vue';
 import './assets/style.css';
-import router from './router';
+import router, { routes } from './router';
 
-// Create app and head instances
-const app = createApp(App);
-const head = createHead();
+// For SSG build, use ViteSSG; for dev, fall back to regular Vue app
+export const createApp = ViteSSG(
+  App,
+  {
+    routes,
+    base: import.meta.env.BASE_URL,
+  },
+  ({ app, router, routes, isClient, initialState }) => {
+    // Setup head management
+    const head = createHead();
+    app.use(head);
 
-// Use plugins
-app.use(router);
-app.use(head);
+    // Client-side only logic
+    if (isClient) {
+      // Any client-specific initialization
+    }
+  },
+);
 
-// Initialize app
-app.mount('#app');
+// Fallback for development mode
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  const app = createVueApp(App);
+  const head = createHead();
+
+  app.use(router);
+  app.use(head);
+  app.mount('#app');
+}

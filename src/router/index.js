@@ -1,11 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router';
 
 // Import route components - adjust paths as needed for your project
 import Home from '../views/Home.vue';
 const ContactUs = () => import('../views/ContactUs.vue');
 const About = () => import('../views/About.vue');
+
 // Define routes with meta properties to indicate prefetching priority
-const routes = [
+export const routes = [
   {
     path: '/',
     name: 'Home',
@@ -27,8 +28,9 @@ const routes = [
   },
 ];
 
+// Create router with SSR-compatible history
 const router = createRouter({
-  history: createWebHistory(),
+  history: typeof window !== 'undefined' ? createWebHistory() : createMemoryHistory(),
   routes,
 });
 

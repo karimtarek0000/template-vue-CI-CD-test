@@ -10,4 +10,8 @@ export default defineConfig({
       reportsDirectory: './coverage',
     },
   },
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+  },
 });
