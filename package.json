@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:optimized",
+    "build": "vite build",
     "build:optimized": "npm run clean && npm run build:ssg && npm run critical:extract && npm run critical:analyze && npm run critical:report",
     "build:ssg": "vite-ssg build",
     "build:critical": "node scripts/build-critical.js",
