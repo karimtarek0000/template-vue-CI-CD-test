@@ -17,57 +17,74 @@ const CONFIG = {
 };
 
 /**
- * Extract Critical CSS for multiple viewports and routes
+ * Extract Critical CSS for specific route and viewport
+ */
+async function extractCriticalCSSForRoute(route, viewport) {
+  // Fix HTML file path mapping for vite-ssg output
+  let htmlFile;
+  if (route === '/') {
+    htmlFile = 'index.html';
+  } else {
+    htmlFile = `${route.slice(1)}.html`; // Remove leading slash and add .html
+  }
+
+  const htmlPath = join(CONFIG.distDir, htmlFile);
+
+  if (!existsSync(htmlPath)) {
+    console.warn(`⚠️  HTML file not found: ${htmlPath}`);
+    return null;
+  }
+
+  console.log(`  📱 Extracting for ${viewport.name} (${viewport.width}x${viewport.height})`);
+
+  try {
+    const result = await critical({
+      src: htmlPath,
+      width: viewport.width,
+      height: viewport.height,
+      ...CONFIG.critical,
+    });
+
+    if (result.css) {
+      console.log(`  ✅ Extracted ${result.css.length} characters`);
+      return result.css;
+    }
+  } catch (error) {
+    console.error(
+      `  ❌ Failed to extract critical CSS for ${route} (${viewport.name}):`,
+      error.message,
+    );
+  }
+
+  return null;
+}
+
+/**
+ * Extract Critical CSS for multiple viewports and routes - page-specific approach
  */
 async function extractCriticalCSS() {
   console.log('🚀 Starting Critical CSS extraction...');
 
-  const allCriticalCSS = [];
+  const routeCriticalCSS = {};
 
   for (const route of CONFIG.routes) {
-    // Fix HTML file path mapping for vite-ssg output
-    let htmlFile;
-    if (route === '/') {
-      htmlFile = 'index.html';
-    } else {
-      htmlFile = `${route.slice(1)}.html`; // Remove leading slash and add .html
-    }
-
-    const htmlPath = join(CONFIG.distDir, htmlFile);
-
-    if (!existsSync(htmlPath)) {
-      console.warn(`⚠️  HTML file not found: ${htmlPath}`);
-      continue;
-    }
-
     console.log(`📄 Processing route: ${route}`);
+    const routeCSS = [];
 
     for (const viewport of CONFIG.viewports) {
-      console.log(`  📱 Extracting for ${viewport.name} (${viewport.width}x${viewport.height})`);
-
-      try {
-        const result = await critical({
-          src: htmlPath,
-          width: viewport.width,
-          height: viewport.height,
-          ...CONFIG.critical,
-        });
-
-        if (result.css) {
-          allCriticalCSS.push(`/* ${route} - ${viewport.name} */`);
-          allCriticalCSS.push(result.css);
-          console.log(`  ✅ Extracted ${result.css.length} characters`);
-        }
-      } catch (error) {
-        console.error(
-          `  ❌ Failed to extract critical CSS for ${route} (${viewport.name}):`,
-          error.message,
-        );
+      const css = await extractCriticalCSSForRoute(route, viewport);
+      if (css) {
+        routeCSS.push(`/* ${viewport.name} */`);
+        routeCSS.push(css);
       }
+    }
+
+    if (routeCSS.length > 0) {
+      routeCriticalCSS[route] = routeCSS.join('\n');
     }
   }
 
-  return allCriticalCSS.join('\n');
+  return routeCriticalCSS;
 }
 
 /**
@@ -97,22 +114,31 @@ function optimizeCriticalCSS(css) {
     css = uniqueRules.join('\n');
   }
 
-  // Additional optimizations can be added here
+  // Additional optimizations
   if (CONFIG.optimization.combine) {
     // Combine similar rules (simplified implementation)
     css = css.replace(/\n\s*\n/g, '\n');
+  }
+
+  // Remove CSS comments and unnecessary whitespace
+  if (CONFIG.optimization.minify) {
+    css = css
+      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .replace(/\s*{\s*/g, '{') // Clean around braces
+      .replace(/\s*}\s*/g, '}')
+      .replace(/;\s*/g, ';') // Clean around semicolons
+      .trim();
   }
 
   return css;
 }
 
 /**
- * Inject Critical CSS into HTML files with advanced optimizations
+ * Inject route-specific Critical CSS into HTML files
  */
-async function injectCriticalCSS(criticalCSS) {
+async function injectCriticalCSS(routeCriticalCSS) {
   console.log('💉 Injecting Critical CSS into HTML files...');
-
-  const optimizedCSS = optimizeCriticalCSS(criticalCSS);
 
   for (const route of CONFIG.routes) {
     const htmlFile = route === '/' ? 'index.html' : `${route.slice(1)}.html`;
@@ -122,12 +148,21 @@ async function injectCriticalCSS(criticalCSS) {
       continue;
     }
 
+    const routeCSS = routeCriticalCSS[route];
+    if (!routeCSS) {
+      console.warn(`⚠️  No critical CSS found for route: ${route}`);
+      continue;
+    }
+
     try {
       const html = readFileSync(htmlPath, 'utf8');
       const $ = load(html);
 
       // Remove existing critical CSS if any
       $('style[data-critical]').remove();
+
+      // Optimize the CSS for this specific route
+      const optimizedCSS = optimizeCriticalCSS(routeCSS);
 
       // Inject new critical CSS in the head with proper attributes
       const criticalStyleTag = `<style data-critical data-route="${route}">${optimizedCSS}</style>`;
@@ -173,51 +208,52 @@ async function injectCriticalCSS(criticalCSS) {
 }
 
 /**
- * Enhanced performance impact analysis
+ * Enhanced performance impact analysis for each route
  */
-function estimatePerformanceImpact(criticalCSS) {
-  const cssSize = Buffer.byteLength(criticalCSS, 'utf8');
-  const gzippedEstimate = Math.round(cssSize * 0.3); // Rough gzip estimate
-  const budgetUsage = (cssSize / CONFIG.performance.maxCriticalCssSize) * 100;
-
+function estimatePerformanceImpact(routeCriticalCSS) {
   console.log('\n📊 Performance Impact Analysis:');
-  console.log(
-    `  Critical CSS size: ${cssSize.toLocaleString()} bytes (~${gzippedEstimate.toLocaleString()} bytes gzipped)`,
-  );
-  console.log(
-    `  Budget utilization: ${budgetUsage.toFixed(1)}% of ${CONFIG.performance.maxCriticalCssSize.toLocaleString()} bytes`,
-  );
 
-  // Performance predictions
-  if (cssSize < 4000) {
-    console.log(`  🚀 FCP improvement: Excellent (sub-100ms reduction expected)`);
-  } else if (cssSize < 8000) {
-    console.log(`  ⚡ FCP improvement: Good (50-100ms reduction expected)`);
-  } else if (cssSize < CONFIG.performance.maxCriticalCssSize) {
-    console.log(`  📈 FCP improvement: Moderate (20-50ms reduction expected)`);
-  } else {
-    console.log(`  ⚠️  FCP improvement: Limited (may increase initial payload)`);
-  }
+  let totalSize = 0;
 
-  // Budget warnings
-  if (budgetUsage > CONFIG.performance.warningThreshold * 100) {
-    console.warn(`⚠️  Critical CSS approaching budget limit. Consider optimizing.`);
-  }
+  for (const [route, css] of Object.entries(routeCriticalCSS)) {
+    const cssSize = Buffer.byteLength(css, 'utf8');
+    const gzippedEstimate = Math.round(cssSize * 0.3);
+    const budgetUsage = (cssSize / CONFIG.performance.maxCriticalCssSize) * 100;
 
-  if (cssSize > CONFIG.performance.maxCriticalCssSize) {
-    console.warn(`❌ Critical CSS exceeds recommended budget. Performance may be impacted.`);
+    totalSize += cssSize;
+
+    console.log(`\n  Route: ${route}`);
     console.log(
-      `   Consider: reducing critical CSS scope, using smaller viewports, or excluding non-essential rules.`,
+      `    Size: ${cssSize.toLocaleString()} bytes (~${gzippedEstimate.toLocaleString()} bytes gzipped)`,
     );
+    console.log(
+      `    Budget: ${budgetUsage.toFixed(1)}% of ${CONFIG.performance.maxCriticalCssSize.toLocaleString()} bytes`,
+    );
+
+    // Performance predictions per route
+    if (cssSize < 4000) {
+      console.log(`    🚀 FCP improvement: Excellent (sub-100ms reduction expected)`);
+    } else if (cssSize < 8000) {
+      console.log(`    ⚡ FCP improvement: Good (50-100ms reduction expected)`);
+    } else if (cssSize < CONFIG.performance.maxCriticalCssSize) {
+      console.log(`    📈 FCP improvement: Moderate (20-50ms reduction expected)`);
+    } else {
+      console.log(`    ⚠️  FCP improvement: Limited (may increase initial payload)`);
+    }
+
+    // Budget warnings per route
+    if (budgetUsage > CONFIG.performance.warningThreshold * 100) {
+      console.warn(
+        `    ⚠️  Critical CSS approaching budget limit for ${route}. Consider optimizing.`,
+      );
+    }
+
+    if (cssSize > CONFIG.performance.maxCriticalCssSize) {
+      console.warn(`    ❌ Critical CSS exceeds recommended budget for ${route}.`);
+    }
   }
 
-  // Network impact estimation
-  const downloadTime3G = Math.round((cssSize / ((400 * 1024) / 8)) * 1000); // 400 Kbps 3G
-  const downloadTime4G = Math.round((cssSize / ((1.6 * 1024 * 1024) / 8)) * 1000); // 1.6 Mbps 4G
-
-  console.log('\n🌐 Network Impact:');
-  console.log(`  Download time (3G): ~${downloadTime3G}ms`);
-  console.log(`  Download time (4G): ~${downloadTime4G}ms`);
+  console.log(`\n  📦 Total critical CSS across all routes: ${totalSize.toLocaleString()} bytes`);
 }
 
 /**
@@ -238,22 +274,23 @@ async function main() {
       `🎨 Processing ${CONFIG.routes.length} routes across ${CONFIG.viewports.length} viewports\n`,
     );
 
-    // Step 1: Extract Critical CSS
-    const criticalCSS = await extractCriticalCSS();
+    // Step 1: Extract Critical CSS per route
+    const routeCriticalCSS = await extractCriticalCSS();
 
-    if (!criticalCSS.trim()) {
+    if (Object.keys(routeCriticalCSS).length === 0) {
       throw new Error('No critical CSS was extracted. Check your HTML files and CSS selectors.');
     }
 
-    // Step 2: Write to temporary file for inspection
-    writeFileSync(CONFIG.criticalCssFile, criticalCSS);
-    console.log(`\n💾 Critical CSS saved to: ${CONFIG.criticalCssFile}`);
+    // Step 2: Write combined file for inspection (optional)
+    const combinedCSS = Object.values(routeCriticalCSS).join('\n\n');
+    writeFileSync(CONFIG.criticalCssFile, combinedCSS);
+    console.log(`\n💾 Combined Critical CSS saved to: ${CONFIG.criticalCssFile}`);
 
-    // Step 3: Inject into HTML files
-    await injectCriticalCSS(criticalCSS);
+    // Step 3: Inject route-specific CSS into HTML files
+    await injectCriticalCSS(routeCriticalCSS);
 
-    // Step 4: Performance analysis
-    estimatePerformanceImpact(criticalCSS);
+    // Step 4: Performance analysis per route
+    estimatePerformanceImpact(routeCriticalCSS);
 
     // Step 5: Cleanup (configurable)
     if (process.env.CLEANUP_CRITICAL_CSS !== 'false') {
